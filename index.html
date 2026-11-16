@@ -1,0 +1,1913 @@
+<!DOCTYPE html>
+<html lang="bn" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ILMORA — My Life, My Learning, My Management</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        islamic: {
+                            50: '#fdf4ff',
+                            600: '#c084fc',
+                            700: '#a855f7',
+                            900: '#581c87'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & SolaimanLipi/Hind Siliguri for Bangla -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Hind Siliguri', sans-serif;
+            overflow-x: hidden;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(34, 197, 94, 0.5);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(34, 197, 94, 0.8);
+        }
+        .app-card {
+            transition: all 0.2s ease-in-out;
+        }
+        .app-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+    <!-- Top Navigation / Header -->
+    <header class="sticky top-0 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Left: Brand & Mobile Menu Toggle -->
+            <div class="flex items-center space-x-3">
+                <button id="mobileMenuBtn" class="md:hidden text-slate-600 dark:text-slate-300 hover:text-brand-600 focus:outline-none p-2 rounded-lg">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <div class="flex items-center space-x-2 cursor-pointer" onclick="switchView('home')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-500 flex items-center justify-center text-white font-bold text-xl shadow-md">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-tight tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
+                            ILMORA <span class="text-xs px-2 py-0.5 rounded-full bg-brand-100 dark:bg-brand-900 text-brand-700 dark:text-brand-300 font-semibold" data-i18n="badgePro">Pro</span>
+                        </h1>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block" data-i18n="tagline">One Platform. Every Part of Life.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle: Quick Search Bar -->
+            <div class="hidden lg:flex items-center flex-1 max-w-md mx-8">
+                <div class="relative w-full">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                        <i class="fa-solid fa-search"></i>
+                    </span>
+                    <input type="text" id="globalSearchInput" placeholder="Search subjects, notes, finance, tasks..." 
+                           class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-700 border border-transparent rounded-xl text-sm focus:outline-none focus:bg-white dark:focus:bg-slate-800 focus:border-brand-500 transition-all"
+                           oninput="handleGlobalSearch(this.value)">
+                </div>
+            </div>
+
+            <!-- Right: Utility Controls (Language, Theme, Alarm, Profile) -->
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <!-- Language Toggle Button -->
+                <button onclick="toggleLanguage()" class="flex items-center space-x-1 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-700 transition" title="Switch Language / ভাষা পরিবর্তন করুন">
+                    <i class="fa-solid fa-globe text-brand-600"></i>
+                    <span id="currentLangLabel" class="font-bold">BN</span>
+                </button>
+
+                <!-- Theme Toggle Button -->
+                <button onclick="toggleTheme()" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition" title="Toggle Theme">
+                    <i id="themeIcon" class="fa-solid fa-moon"></i>
+                </button>
+
+                <!-- Quick Alarm Shortcut -->
+                <button onclick="openModal('alarmModal')" class="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition relative" title="Study Alarm">
+                    <i class="fa-solid fa-stopwatch text-brand-600"></i>
+                    <span id="alarmActiveIndicator" class="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500 hidden"></span>
+                </button>
+
+                <!-- Profile Button -->
+                <button onclick="switchView('profile')" class="flex items-center space-x-2 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition">
+                    <div class="w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-sm overflow-hidden" id="headerProfileAvatar">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout with Collapsible Sidebar & Content Area -->
+    <div class="flex-1 flex max-w-7xl mx-auto w-full">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 transform -translate-x-full md:translate-x-0 md:static md:inset-auto transition-transform duration-200 ease-in-out flex flex-col pt-16 md:pt-0">
+            <div class="p-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between md:hidden">
+                <span class="font-bold text-lg" data-i18n="navMenu">Navigation Menu</span>
+                <button onclick="toggleSidebar()" class="text-slate-500 hover:text-slate-700"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-4 space-y-6">
+                <!-- Core Navigation -->
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-3" data-i18n="secMain">Main Command</p>
+                    <nav class="space-y-1">
+                        <button onclick="switchView('home')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-brand-50 dark:hover:bg-slate-700 hover:text-brand-600 active-nav transition" data-view="home">
+                            <i class="fa-solid fa-house w-5 text-brand-600"></i>
+                            <span data-i18n="navHome">Command Center</span>
+                        </button>
+                        <button onclick="switchView('education')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-brand-50 dark:hover:bg-slate-700 hover:text-brand-600 transition" data-view="education">
+                            <i class="fa-solid fa-graduation-cap w-5 text-blue-500"></i>
+                            <span data-i18n="navEducation">Education & Dakhil 2027</span>
+                        </button>
+                        <button onclick="switchView('library')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-brand-50 dark:hover:bg-slate-700 hover:text-brand-600 transition" data-view="library">
+                            <i class="fa-solid fa-book-bookmark w-5 text-amber-500"></i>
+                            <span data-i18n="navLibrary">Digital Library</span>
+                        </button>
+                        <button onclick="switchView('islamic')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-brand-50 dark:hover:bg-slate-700 hover:text-brand-600 transition" data-view="islamic">
+                            <i class="fa-solid fa-mosque w-5 text-purple-500"></i>
+                            <span data-i18n="navIslamic">Islamic Corner & Prayer</span>
+                        </button>
+                        <button onclick="switchView('routine')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-brand-50 dark:hover:bg-slate-700 hover:text-brand-600 transition" data-view="routine">
+                            <i class="fa-solid fa-clock-rotate-left w-5 text-emerald-500"></i>
+                            <span data-i18n="navRoutine">Daily Routine & Time</span>
+                        </button>
+                        <button onclick="switchView('finance')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-brand-50 dark:hover:bg-slate-700 hover:text-brand-600 transition" data-view="finance">
+                            <i class="fa-solid fa-wallet w-5 text-emerald-600"></i>
+                            <span data-i18n="navFinance">My Wallet & Finance</span>
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Tools & Management -->
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-3" data-i18n="secTools">Management & Tools</p>
+                    <nav class="space-y-1">
+                        <button onclick="switchView('notes')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-brand-50 dark:hover:bg-slate-700 hover:text-brand-600 transition" data-view="notes">
+                            <i class="fa-solid fa-note-sticky w-5 text-yellow-500"></i>
+                            <span data-i18n="navNotes">Notes & Notices</span>
+                        </button>
+                        <button onclick="switchView('reports')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-brand-50 dark:hover:bg-slate-700 hover:text-brand-600 transition" data-view="reports">
+                            <i class="fa-solid fa-chart-pie w-5 text-indigo-500"></i>
+                            <span data-i18n="navReports">Reports & Analytics</span>
+                        </button>
+                        <button onclick="switchView('settings')" class="sidebar-link w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-brand-50 dark:hover:bg-slate-700 hover:text-brand-600 transition" data-view="settings">
+                            <i class="fa-solid fa-gear w-5 text-slate-500"></i>
+                            <span data-i18n="navSettings">Global Settings & Builder</span>
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Dynamic Custom Features Sidebar Section -->
+                <div id="sidebarCustomContainer">
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-3" data-i18n="secCustom">Custom Features</p>
+                    <div id="sidebarCustomLinks" class="space-y-1">
+                        <!-- Dynamically injected custom feature sidebar links -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Footer Status -->
+            <div class="p-4 border-t border-slate-200 dark:border-slate-700">
+                <div class="bg-brand-50 dark:bg-slate-700/50 p-3 rounded-xl border border-brand-100 dark:border-slate-600">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-bold text-brand-700 dark:text-brand-300" data-i18n="storageStatus">Local Storage</span>
+                        <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400" data-i18n="storageDesc">Data saved securely in browser.</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto max-w-full">
+            
+            <!-- VIEW 1: HOME COMMAND CENTER -->
+            <section id="view-home" class="space-y-6">
+                <!-- Welcome Banner & Quick Notice Ticker -->
+                <div class="bg-gradient-to-r from-brand-700 via-brand-600 to-emerald-600 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+                    <div class="absolute right-0 top-0 bottom-0 w-1/3 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
+                    <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                        <div>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-semibold backdrop-blur-md mb-3">
+                                <i class="fa-solid fa-shield-halved"></i> <span data-i18n="welcomeBadge">Personal Ecosystem Active</span>
+                            </span>
+                            <h2 class="text-2xl sm:text-3xl font-bold tracking-tight mb-2" id="homeGreetingTitle">Welcome Back, Achiever!</h2>
+                            <p class="text-brand-100 text-sm max-w-xl" data-i18n="welcomeSub">Manage your studies, daily routine, Islamic habits, and finances in one unified platform.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="openModal('quickTaskModal')" class="px-4 py-2.5 bg-white text-brand-800 rounded-xl font-semibold text-sm shadow-md hover:bg-brand-50 transition flex items-center gap-2">
+                                <i class="fa-solid fa-plus"></i> <span data-i18n="btnAddActivity">Add Activity / Task</span>
+                            </button>
+                            <button onclick="switchView('education')" class="px-4 py-2.5 bg-brand-800/60 text-white border border-white/20 rounded-xl font-semibold text-sm hover:bg-brand-800 transition flex items-center gap-2 backdrop-blur-md">
+                                <i class="fa-solid fa-book-open"></i> <span data-i18n="btnStudyNow">Study Center</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Important Notice Ticker Bar -->
+                <div id="homeNoticeBanner" class="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 rounded-2xl p-4 flex items-center justify-between shadow-sm">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-sm">
+                            <i class="fa-solid fa-bullhorn"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400" data-i18n="noticeTitle">Important Notice & Reminder</h4>
+                            <p id="homeNoticeText" class="text-sm font-medium text-slate-700 dark:text-slate-300">Complete Dakhil 2027 Arabic Fiqh revision and log today's prayer checklist.</p>
+                        </div>
+                    </div>
+                    <button onclick="switchView('notes')" class="text-xs font-bold text-amber-700 dark:text-amber-400 hover:underline shrink-0" data-i18n="viewAll">View All →</button>
+                </div>
+
+                <!-- Quick Stats Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium" data-i18n="statStudyHours">Study Time Today</p>
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white" id="statStudyTime">4.5 Hrs</h3>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-mosque"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium" data-i18n="statPrayer">Prayers Completed</p>
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white" id="statPrayerCount">5 / 5</h3>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium" data-i18n="statBalance">Wallet Balance</p>
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white" id="statWalletBalance">৳12,450</h3>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-list-check"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium" data-i18n="statTasks">Tasks Completed</p>
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white" id="statTaskCount">8 / 10</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Homepage Category Sections & Feature Buttons -->
+                <div class="space-y-8 pt-2">
+                    
+                    <!-- Section A: Education & Study -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-book-open-reader text-blue-500"></i> <span data-i18n="secEduTitle">Education & Dakhil 2027 Center</span>
+                            </h3>
+                            <button onclick="switchView('education')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline" data-i18n="exploreAll">Explore All →</button>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3" id="homeEduButtons">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Section B: Personal Life Management -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-user-clock text-emerald-500"></i> <span data-i18n="secLifeTitle">Personal Life & Daily Routine</span>
+                            </h3>
+                            <button onclick="switchView('routine')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline" data-i18n="exploreAll">Explore All →</button>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3" id="homeLifeButtons">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Section C: Islamic Life Management -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-kaaba text-purple-500"></i> <span data-i18n="secIslamicTitle">Islamic Corner & Prayer</span>
+                            </h3>
+                            <button onclick="switchView('islamic')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline" data-i18n="exploreAll">Explore All →</button>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3" id="homeIslamicButtons">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Section D: Financial Management -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-wallet text-emerald-600"></i> <span data-i18n="secFinanceTitle">Financial Management</span>
+                            </h3>
+                            <button onclick="switchView('finance')" class="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline" data-i18n="exploreAll">Explore All →</button>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3" id="homeFinanceButtons">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Section E: Personal Management, Notes & Custom Features -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-folder-open text-amber-500"></i> <span data-i18n="secPersonalTitle">Personal Management & Custom Tools</span>
+                            </h3>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3" id="homePersonalButtons">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Dynamic User Custom Features Section -->
+                    <div id="homeCustomSectionContainer" class="hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-star text-yellow-500"></i> <span data-i18n="secCustomTitle">Custom Added Features</span>
+                            </h3>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3" id="homeCustomButtonsGrid">
+                            <!-- User created custom buttons -->
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- VIEW 2: EDUCATION & DAKHIL 2027 MANAGEMENT -->
+            <section id="view-education" class="space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <div>
+                        <span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider" data-i18n="eduHeaderTag">Advanced Academic Center</span>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white" data-i18n="eduMainTitle">Education & Dakhil 2027 Learning Hub</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="eduMainSub">Manage subjects, video lectures, online classes, and Dakhil preparation resources.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="openModal('addSubjectModal')" class="px-4 py-2.5 bg-brand-600 text-white rounded-xl font-semibold text-sm shadow-md hover:bg-brand-700 transition flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> <span data-i18n="btnAddSubject">Add Subject</span>
+                        </button>
+                        <button onclick="openModal('addStudyResourceModal')" class="px-4 py-2.5 bg-blue-600 text-white rounded-xl font-semibold text-sm shadow-md hover:bg-blue-700 transition flex items-center gap-2">
+                            <i class="fa-solid fa-video"></i> <span data-i18n="btnAddResource">Add Lecture / Resource</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Verified Dakhil 2027 Starter Platforms Section -->
+                <div class="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 rounded-3xl p-6">
+                    <h3 class="text-lg font-bold text-blue-900 dark:text-blue-300 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-award"></i> <span data-i18n="dakhilStarterTitle">Verified Dakhil 2027 Online Madrasah & Platforms</span>
+                    </h3>
+                    <p class="text-xs text-blue-700 dark:text-blue-400 mb-4" data-i18n="dakhilStarterSub">Official and verified portals recommended for Dakhil curriculum preparation.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-blue-100 dark:border-slate-700 shadow-sm">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-bold text-slate-900 dark:text-white text-sm">At-Tadrees Online Madrasa</span>
+                                <span class="text-[10px] px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full font-bold">Verified</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mb-3">Official Dakhil 2027 course info and trial classes.</p>
+                            <a href="https://www.attadrees.com/" target="_blank" class="text-xs font-semibold text-brand-600 hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-external-link"></i> Visit Website
+                            </a>
+                        </div>
+
+                        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-blue-100 dark:border-slate-700 shadow-sm">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-bold text-slate-900 dark:text-white text-sm">Ifta Online Madrasah</span>
+                                <span class="text-[10px] px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full font-bold">Verified</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mb-3">Dakhil 2027 Arabic & Islamic preparation classes.</p>
+                            <a href="https://www.iftaonlinemadrasah.com/classes" target="_blank" class="text-xs font-semibold text-brand-600 hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-external-link"></i> Visit Classes
+                            </a>
+                        </div>
+
+                        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-blue-100 dark:border-slate-700 shadow-sm">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-bold text-slate-900 dark:text-white text-sm">10 Minute School (SSC 2027)</span>
+                                <span class="text-[10px] px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full font-bold">General</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mb-3">Supplementary general-subject learning resources.</p>
+                            <a href="https://10minuteschool.com/ssc/" target="_blank" class="text-xs font-semibold text-brand-600 hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-external-link"></i> Visit SSC Portal
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subject Cards Grid -->
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4" data-i18n="subjectManagerTitle">Manage Subjects & Course Dashboards</h3>
+                    <div id="subjectsGridContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+
+                <!-- Resource Directory Table -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4" data-i18n="resourceDirTitle">All Saved Study Resources & Lectures</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 uppercase text-xs">
+                                <tr>
+                                    <th class="p-3 rounded-l-xl" data-i18n="thTitle">Title</th>
+                                    <th class="p-3" data-i18n="thSubject">Subject</th>
+                                    <th class="p-3" data-i18n="thType">Type</th>
+                                    <th class="p-3" data-i18n="thLink">Link / Source</th>
+                                    <th class="p-3 rounded-r-xl text-right" data-i18n="thAction">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studyResourcesTableBody" class="divide-y divide-slate-100 dark:divide-slate-700">
+                                <!-- Rendered dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 3: DIGITAL LIBRARY -->
+            <section id="view-library" class="space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <div>
+                        <span class="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider" data-i18n="libHeaderTag">Digital Library & Publications</span>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white" data-i18n="libMainTitle">Digital Library & Publisher Guides</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="libMainSub">Access textbooks, guidebooks, and publisher resources (Al-Fatah, Lecture, Darsun).</p>
+                    </div>
+                    <button onclick="openModal('addLibraryBookModal')" class="px-4 py-2.5 bg-amber-600 text-white rounded-xl font-semibold text-sm shadow-md hover:bg-amber-700 transition flex items-center gap-2">
+                        <i class="fa-solid fa-book"></i> <span data-i18n="btnAddBook">Add Book / Publication</span>
+                    </button>
+                </div>
+
+                <!-- Publishers Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">AF</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 dark:text-white">Al-Fatah Publications</h4>
+                                <p class="text-xs text-slate-500">Dakhil & SSC Guidebooks</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 mb-3" data-i18n="pubDesc1">Authorized model tests and suggestion guides for Dakhil preparation.</p>
+                        <button onclick="filterLibraryByPublisher('Al-Fatah')" class="text-xs font-bold text-amber-600 hover:underline" data-i18n="viewPublisherBooks">View Books →</button>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold">LP</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 dark:text-white">Lecture Publications</h4>
+                                <p class="text-xs text-slate-500">Textbooks & Notes</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 mb-3" data-i18n="pubDesc2">Comprehensive textbook guides and board question analysis.</p>
+                        <button onclick="filterLibraryByPublisher('Lecture')" class="text-xs font-bold text-amber-600 hover:underline" data-i18n="viewPublisherBooks">View Books →</button>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold">DP</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 dark:text-white">Darsun Publications</h4>
+                                <p class="text-xs text-slate-500">Arabic & Islamic Books</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 mb-3" data-i18n="pubDesc3">Specialized Arabic grammar, Fiqh, and Hadith study materials.</p>
+                        <button onclick="filterLibraryByPublisher('Darsun')" class="text-xs font-bold text-amber-600 hover:underline" data-i18n="viewPublisherBooks">View Books →</button>
+                    </div>
+                </div>
+
+                <!-- Library Books Grid -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white" data-i18n="libraryCatalog">Digital Library Catalog</h3>
+                        <input type="text" placeholder="Search books..." oninput="filterLibraryBooks(this.value)" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-700 rounded-xl text-xs focus:outline-none">
+                    </div>
+                    <div id="libraryBooksGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 4: ISLAMIC CORNER & PRAYER TRACKER -->
+            <section id="view-islamic" class="space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <div>
+                        <span class="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider" data-i18n="islamicHeaderTag">Spiritual Management</span>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white" data-i18n="islamicMainTitle">Islamic Corner & Prayer Tracker</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="islamicMainSub">Daily prayers, Quran, Duas, Hadith, and Islamic learning notes.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="openModal('addIslamicContentModal')" class="px-4 py-2.5 bg-purple-600 text-white rounded-xl font-semibold text-sm shadow-md hover:bg-purple-700 transition flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> <span data-i18n="btnAddIslamic">Add Dua / Hadith</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Prayer Tracker Card -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-mosque text-purple-600"></i> <span data-i18n="prayerTrackerTitle">Daily Prayer Tracker (5 Waqt)</span>
+                        </h3>
+                        <span class="text-xs font-semibold text-slate-500" id="currentPrayerDate">Today</span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-4" id="prayerChecklistGrid">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+
+                <!-- Islamic Content Tabs / List -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white" data-i18n="islamicCollectionTitle">Quran, Dua & Hadith Collection</h3>
+                        <div class="flex gap-2">
+                            <button onclick="filterIslamic('All')" class="px-3 py-1 bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 text-xs font-semibold rounded-lg">All</button>
+                            <button onclick="filterIslamic('Dua')" class="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold rounded-lg">Duas</button>
+                            <button onclick="filterIslamic('Hadith')" class="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold rounded-lg">Hadith</button>
+                        </div>
+                    </div>
+                    <div id="islamicContentGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 5: DAILY ROUTINE & TIME TRACKER -->
+            <section id="view-routine" class="space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <div>
+                        <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider" data-i18n="routineHeaderTag">Time & Life Analytics</span>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white" data-i18n="routineMainTitle">Daily Routine & Time Tracker</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="routineMainSub">Track study hours, sleep, prayers, activities, and planned vs. completed logs.</p>
+                    </div>
+                    <button onclick="openModal('addActivityModal')" class="px-4 py-2.5 bg-emerald-600 text-white rounded-xl font-semibold text-sm shadow-md hover:bg-emerald-700 transition flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> <span data-i18n="btnAddActivity">Add Activity Log</span>
+                    </button>
+                </div>
+
+                <!-- Routine Stats / Analytics Summary -->
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <p class="text-xs text-slate-500 font-medium" data-i18n="statProductive">Productive Time</p>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-1" id="routineProductiveTime">6.5 Hours</h3>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <p class="text-xs text-slate-500 font-medium" data-i18n="statSleep">Sleep Duration</p>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-1" id="routineSleepTime">7.0 Hours</h3>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <p class="text-xs text-slate-500 font-medium" data-i18n="statCompletedTasks">Completed Tasks</p>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-1" id="routineCompletedCount">8 / 10</h3>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <p class="text-xs text-slate-500 font-medium" data-i18n="statMissedTasks">Missed / Review</p>
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-1 text-amber-600" id="routineMissedCount">2 Activities</h3>
+                    </div>
+                </div>
+
+                <!-- Daily Activity Timeline & Logs -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white" data-i18n="activityLogTitle">Today's Activity Log & What I Did / Missed</h3>
+                    </div>
+                    <div class="space-y-3" id="activityListContainer">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 6: MY WALLET & FINANCE -->
+            <section id="view-finance" class="space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <div>
+                        <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider" data-i18n="financeHeaderTag">Personal Finance Manager</span>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white" data-i18n="financeMainTitle">My Wallet & Financial Statement</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="financeMainSub">Track income, expenses, category breakdown, and savings goals securely.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="openModal('addIncomeModal')" class="px-4 py-2.5 bg-emerald-600 text-white rounded-xl font-semibold text-sm shadow-md hover:bg-emerald-700 transition flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-down"></i> <span data-i18n="btnAddIncome">Add Income</span>
+                        </button>
+                        <button onclick="openModal('addExpenseModal')" class="px-4 py-2.5 bg-rose-600 text-white rounded-xl font-semibold text-sm shadow-md hover:bg-rose-700 transition flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-up"></i> <span data-i18n="btnAddExpense">Add Expense</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Financial Overview Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <p class="text-xs text-slate-500 font-medium" data-i18n="finTotalIncome">Total Income</p>
+                        <h3 class="text-2xl font-bold text-emerald-600 mt-1" id="finTotalIncomeDisplay">৳25,000</h3>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <p class="text-xs text-slate-500 font-medium" data-i18n="finTotalExpense">Total Expenses</p>
+                        <h3 class="text-2xl font-bold text-rose-600 mt-1" id="finTotalExpenseDisplay">৳12,550</h3>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <p class="text-xs text-slate-500 font-medium" data-i18n="finNetBalance">Current Balance</p>
+                        <h3 class="text-2xl font-bold text-blue-600 mt-1" id="finNetBalanceDisplay">৳12,450</h3>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions Table -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white" data-i18n="transactionHistory">Recent Transactions & Statement</h3>
+                        <button onclick="window.print()" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-700 text-xs font-semibold rounded-xl hover:bg-slate-200">
+                            <i class="fa-solid fa-print"></i> Print / PDF Statement
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 uppercase text-xs">
+                                <tr>
+                                    <th class="p-3 rounded-l-xl" data-i18n="thTitle">Title</th>
+                                    <th class="p-3" data-i18n="thCategory">Category</th>
+                                    <th class="p-3" data-i18n="thDate">Date</th>
+                                    <th class="p-3" data-i18n="thType">Type</th>
+                                    <th class="p-3 text-right" data-i18n="thAmount">Amount</th>
+                                    <th class="p-3 rounded-r-xl text-right" data-i18n="thAction">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTableBody" class="divide-y divide-slate-100 dark:divide-slate-700">
+                                <!-- Rendered dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 7: NOTES & NOTICES -->
+            <section id="view-notes" class="space-y-6 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <div>
+                        <span class="text-xs font-bold text-yellow-600 dark:text-yellow-400 uppercase tracking-wider" data-i18n="notesHeaderTag">Information Archive</span>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white" data-i18n="notesMainTitle">Personal Notes & Notice Board</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="notesMainSub">Organize study notes, reminders, notices, and important information.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="openModal('addNoteModal')" class="px-4 py-2.5 bg-yellow-600 text-white rounded-xl font-semibold text-sm shadow-md hover:bg-yellow-700 transition flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> <span data-i18n="btnAddNote">Add Note / Notice</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Notices Column -->
+                    <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4" data-i18n="noticesColTitle">Important Notices & Reminders</h3>
+                        <div id="noticesListContainer" class="space-y-3">
+                            <!-- Rendered dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Notes Column -->
+                    <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4" data-i18n="notesColTitle">Study & Personal Notes</h3>
+                        <div id="notesListContainer" class="space-y-3">
+                            <!-- Rendered dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 8: REPORTS & ANALYTICS -->
+            <section id="view-reports" class="space-y-6 hidden">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider" data-i18n="reportsHeaderTag">Comprehensive Analytics</span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2" data-i18n="reportsMainTitle">Ecosystem Reports & Statements</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="reportsMainSub">Review weekly and monthly performance across education, routine, and finance.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-3" data-i18n="eduProgressReport">Education & Study Progress</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700">
+                                <span class="text-slate-500">Total Study Hours (Week):</span>
+                                <span class="font-bold text-slate-900 dark:text-white">28.5 Hours</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700">
+                                <span class="text-slate-500">Dakhil Arabic Preparation:</span>
+                                <span class="font-bold text-brand-600">Advanced (85%)</span>
+                            </div>
+                            <div class="flex justify-between py-2">
+                                <span class="text-slate-500">Exam Performance:</span>
+                                <span class="font-bold text-emerald-600">A+ Grade Average</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-3" data-i18n="financeSummaryReport">Financial Savings & Budget</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700">
+                                <span class="text-slate-500">Monthly Income:</span>
+                                <span class="font-bold text-emerald-600">৳25,000</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-b border-slate-100 dark:border-slate-700">
+                                <span class="text-slate-500">Monthly Expenses:</span>
+                                <span class="font-bold text-rose-600">৳12,550</span>
+                            </div>
+                            <div class="flex justify-between py-2">
+                                <span class="text-slate-500">Total Savings Rate:</span>
+                                <span class="font-bold text-blue-600">50.2%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 9: GLOBAL SETTINGS & CUSTOM FEATURE BUILDER -->
+            <section id="view-settings" class="space-y-6 hidden">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <span class="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider" data-i18n="settingsHeaderTag">Central Control</span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2" data-i18n="settingsMainTitle">Global Settings & Custom Feature Builder</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400" data-i18n="settingsMainSub">Customize your app, add new homepage feature buttons, manage data backup and restore.</p>
+                </div>
+
+                <!-- Custom Feature Builder Card -->
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-puzzle-piece text-brand-600"></i> <span data-i18n="builderTitle">Custom Feature / Button Builder</span>
+                    </h3>
+                    <p class="text-xs text-slate-500" data-i18n="builderSub">Add brand new feature buttons to your homepage instantly without modifying source code.</p>
+                    
+                    <form id="customFeatureForm" onsubmit="handleCreateCustomFeature(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelFeatureName">Feature Name</label>
+                            <input type="text" id="cfName" required placeholder="e.g., Coding Portfolio" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelFeatureIcon">Icon Class (FontAwesome)</label>
+                            <input type="text" id="cfIcon" required placeholder="fa-solid fa-code" value="fa-solid fa-star" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelFeatureCategory">Homepage Category</label>
+                            <select id="cfCategory" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none">
+                                <option value="homeEduButtons">Education & Study</option>
+                                <option value="homeLifeButtons">Personal Life</option>
+                                <option value="homeIslamicButtons">Islamic Corner</option>
+                                <option value="homeFinanceButtons">Financial Management</option>
+                                <option value="homePersonalButtons">Personal Management</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelFeatureDesc">Short Description</label>
+                            <input type="text" id="cfDesc" required placeholder="Brief description of feature" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none">
+                        </div>
+                        <div class="sm:col-span-2 flex justify-end">
+                            <button type="submit" class="px-5 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-semibold hover:bg-brand-700 transition" data-i18n="btnSaveFeature">
+                                Save & Add to Homepage
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Backup and Restore -->
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div>
+                        <h3 class="font-bold text-slate-900 dark:text-white" data-i18n="backupTitle">Data Backup & Restore</h3>
+                        <p class="text-xs text-slate-500" data-i18n="backupSub">Export all your ILMORA data as a JSON file or restore from a backup.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="exportDataBackup()" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl font-semibold text-xs hover:bg-slate-200 transition">
+                            <i class="fa-solid fa-download"></i> Export JSON Backup
+                        </button>
+                        <label class="px-4 py-2.5 bg-brand-600 text-white rounded-xl font-semibold text-xs hover:bg-brand-700 transition cursor-pointer">
+                            <i class="fa-solid fa-upload"></i> Restore Backup
+                            <input type="file" id="importFile" accept=".json" onchange="importDataBackup(event)" class="hidden">
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 10: USER PROFILE -->
+            <section id="view-profile" class="space-y-6 hidden">
+                <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm max-w-2xl mx-auto">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="w-20 h-20 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-3xl shadow-md" id="profileAvatarBig">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900 dark:text-white" id="profileDisplayName">Achiever Student</h2>
+                            <p class="text-xs text-slate-500" data-i18n="profileRole">Dakhil 2027 Candidate & Life Manager</p>
+                        </div>
+                    </div>
+
+                    <form id="profileForm" onsubmit="handleSaveProfile(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelFullName">Full Name</label>
+                            <input type="text" id="pName" required class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none">
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelInstitution">Educational Institution</label>
+                                <input type="text" id="pInstitution" placeholder="Madrasah / School Name" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelClassSession">Class / Session</label>
+                                <input type="text" id="pClass" placeholder="Dakhil 2027" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelBio">Short Biography / Goals</label>
+                            <textarea id="pBio" rows="3" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none"></textarea>
+                        </div>
+                        <div class="flex justify-end pt-2">
+                            <button type="submit" class="px-6 py-2.5 bg-brand-600 text-white rounded-xl text-sm font-semibold hover:bg-brand-700 transition" data-i18n="btnSaveProfile">
+                                Save Profile Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Study Alarm Floating / Modal Widget -->
+    <div id="alarmModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl border border-slate-200 dark:border-slate-700 text-center space-y-4">
+            <div class="w-16 h-16 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center text-2xl mx-auto">
+                <i class="fa-solid fa-stopwatch animate-pulse"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white" data-i18n="alarmModalTitle">Advanced Study Timer & Alarm</h3>
+            <div class="text-4xl font-extrabold text-brand-600 my-4" id="alarmCountdownDisplay">25:00</div>
+            <p class="text-xs text-slate-500" data-i18n="alarmModalSub">Focus session for Dakhil preparation. Timer runs in browser session.</p>
+            <div class="flex justify-center gap-3 pt-2">
+                <button onclick="startStudyAlarm()" class="px-4 py-2 bg-brand-600 text-white rounded-xl text-xs font-bold hover:bg-brand-700" data-i18n="btnStartTimer">Start</button>
+                <button onclick="pauseStudyAlarm()" class="px-4 py-2 bg-amber-500 text-white rounded-xl text-xs font-bold hover:bg-amber-600" data-i18n="btnPauseTimer">Pause</button>
+                <button onclick="resetStudyAlarm()" class="px-4 py-2 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold" data-i18n="btnResetTimer">Reset</button>
+            </div>
+            <button onclick="closeModal('alarmModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+    </div>
+
+    <!-- Generic Modals for Adding Content -->
+    <!-- Add Activity Modal -->
+    <div id="addActivityModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-slate-200 dark:border-slate-700 space-y-4 relative">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white" data-i18n="modalAddActivityTitle">Add Daily Activity / Task</h3>
+            <form onsubmit="handleCreateActivity(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelActName">Activity Name</label>
+                    <input type="text" id="actName" required placeholder="e.g., Arabic Fiqh Revision" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelCategory">Category</label>
+                        <select id="actCategory" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none">
+                            <option value="Study">Study</option>
+                            <option value="Prayer">Prayer</option>
+                            <option value="Quran">Quran</option>
+                            <option value="Rest">Rest</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelDuration">Duration (Hours)</label>
+                        <input type="number" step="0.5" id="actDuration" required value="1" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelStatus">Completion Status</label>
+                    <select id="actStatus" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none">
+                        <option value="Completed">Completed</option>
+                        <option value="Missed">Missed / Postponed</option>
+                    </select>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('addActivityModal')" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold" data-i18n="btnCancel">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-brand-600 text-white rounded-xl text-xs font-semibold" data-i18n="btnSave">Save Activity</button>
+                </div>
+            </form>
+            <button onclick="closeModal('addActivityModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+    </div>
+
+    <!-- Add Income Modal -->
+    <div id="addIncomeModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-slate-200 dark:border-slate-700 space-y-4 relative">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white" data-i18n="modalAddIncomeTitle">Add Income Record</h3>
+            <form onsubmit="handleCreateIncome(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelTitle">Income Source / Title</label>
+                    <input type="text" id="incTitle" required placeholder="e.g., Tutoring / Allowance" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelAmount">Amount (BDT ৳)</label>
+                    <input type="number" step="0.01" id="incAmount" required placeholder="5000" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('addIncomeModal')" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold" data-i18n="btnCancel">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-semibold" data-i18n="btnSave">Save Income</button>
+                </div>
+            </form>
+            <button onclick="closeModal('addIncomeModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+    </div>
+
+    <!-- Add Expense Modal -->
+    <div id="addExpenseModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-slate-200 dark:border-slate-700 space-y-4 relative">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white" data-i18n="modalAddExpenseTitle">Add Expense Record</h3>
+            <form onsubmit="handleCreateExpense(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelTitle">Expense Title</label>
+                    <input type="text" id="expTitle" required placeholder="e.g., Books / Transport" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelAmount">Amount (BDT ৳)</label>
+                        <input type="number" step="0.01" id="expAmount" required placeholder="350" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1" data-i18n="labelCategory">Category</label>
+                        <select id="expCategory" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-700 rounded-xl text-sm focus:outline-none">
+                            <option value="Education">Education</option>
+                            <option value="Food">Food</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Personal">Personal</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('addExpenseModal')" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold" data-i18n="btnCancel">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-rose-600 text-white rounded-xl text-xs font-semibold" data-i18n="btnSave">Save Expense</button>
+                </div>
+            </form>
+            <button onclick="closeModal('addExpenseModal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic & Bilingual Dictionaries -->
+    <script>
+        // --- TRANSLATION DICTIONARIES (EN & BN) ---
+        const translations = {
+            en: {
+                badgePro: "Pro",
+                tagline: "One Platform. Every Part of Life.",
+                navMenu: "Navigation Menu",
+                secMain: "Main Command",
+                navHome: "Command Center",
+                navEducation: "Education & Dakhil 2027",
+                navLibrary: "Digital Library",
+                navIslamic: "Islamic Corner & Prayer",
+                navRoutine: "Daily Routine & Time",
+                navFinance: "My Wallet & Finance",
+                secTools: "Management & Tools",
+                navNotes: "Notes & Notices",
+                navReports: "Reports & Analytics",
+                navSettings: "Global Settings & Builder",
+                secCustom: "Custom Features",
+                storageStatus: "Local Storage",
+                storageDesc: "Data saved securely in browser.",
+                welcomeBadge: "Personal Ecosystem Active",
+                welcomeTitle: "Welcome Back, Achiever!",
+                welcomeSub: "Manage your studies, daily routine, Islamic habits, and finances in one unified platform.",
+                btnAddActivity: "Add Activity / Task",
+                btnStudyNow: "Study Center",
+                noticeTitle: "Important Notice & Reminder",
+                viewAll: "View All →",
+                statStudyTime: "Study Time Today",
+                statPrayer: "Prayers Completed",
+                statBalance: "Wallet Balance",
+                statTasks: "Tasks Completed",
+                secEduTitle: "Education & Dakhil 2027 Center",
+                secLifeTitle: "Personal Life & Daily Routine",
+                secIslamicTitle: "Islamic Corner & Prayer",
+                secFinanceTitle: "Financial Management",
+                secPersonalTitle: "Personal Management & Custom Tools",
+                secCustomTitle: "Custom Added Features",
+                eduHeaderTag: "Advanced Academic Center",
+                eduMainTitle: "Education & Dakhil 2027 Learning Hub",
+                eduMainSub: "Manage subjects, video lectures, online classes, and Dakhil preparation resources.",
+                btnAddSubject: "Add Subject",
+                btnAddResource: "Add Lecture / Resource",
+                dakhilStarterTitle: "Verified Dakhil 2027 Online Madrasah & Platforms",
+                dakhilStarterSub: "Official and verified portals recommended for Dakhil curriculum preparation.",
+                subjectManagerTitle: "Manage Subjects & Course Dashboards",
+                resourceDirTitle: "All Saved Study Resources & Lectures",
+                thTitle: "Title",
+                thSubject: "Subject",
+                thType: "Type",
+                thLink: "Link / Source",
+                thAction: "Action",
+                thCategory: "Category",
+                thDate: "Date",
+                thAmount: "Amount",
+                libHeaderTag: "Digital Library & Publications",
+                libMainTitle: "Digital Library & Publisher Guides",
+                libMainSub: "Access textbooks, guidebooks, and publisher resources (Al-Fatah, Lecture, Darsun).",
+                btnAddBook: "Add Book / Publication",
+                pubDesc1: "Authorized model tests and suggestion guides for Dakhil preparation.",
+                pubDesc2: "Comprehensive textbook guides and board question analysis.",
+                pubDesc3: "Specialized Arabic grammar, Fiqh, and Hadith study materials.",
+                viewPublisherBooks: "View Books →",
+                libraryCatalog: "Digital Library Catalog",
+                islamicHeaderTag: "Spiritual Management",
+                islamicMainTitle: "Islamic Corner & Prayer Tracker",
+                islamicMainSub: "Daily prayers, Quran, Duas, Hadith, and Islamic learning notes.",
+                btnAddIslamic: "Add Dua / Hadith",
+                prayerTrackerTitle: "Daily Prayer Tracker (5 Waqt)",
+                islamicCollectionTitle: "Quran, Dua & Hadith Collection",
+                routineHeaderTag: "Time & Life Analytics",
+                routineMainTitle: "Daily Routine & Time Tracker",
+                routineMainSub: "Track study hours, sleep, prayers, activities, and planned vs. completed logs.",
+                statProductive: "Productive Time",
+                statSleep: "Sleep Duration",
+                statCompletedTasks: "Completed Tasks",
+                statMissedTasks: "Missed / Review",
+                activityLogTitle: "Today's Activity Log & What I Did / Missed",
+                financeHeaderTag: "Personal Finance Manager",
+                financeMainTitle: "My Wallet & Financial Statement",
+                financeMainSub: "Track income, expenses, category breakdown, and savings goals securely.",
+                btnAddIncome: "Add Income",
+                btnAddExpense: "Add Expense",
+                finTotalIncome: "Total Income",
+                finTotalExpense: "Total Expenses",
+                finNetBalance: "Current Balance",
+                transactionHistory: "Recent Transactions & Statement",
+                notesHeaderTag: "Information Archive",
+                notesMainTitle: "Personal Notes & Notice Board",
+                notesMainSub: "Organize study notes, reminders, notices, and important information.",
+                btnAddNote: "Add Note / Notice",
+                noticesColTitle: "Important Notices & Reminders",
+                notesColTitle: "Study & Personal Notes",
+                reportsHeaderTag: "Comprehensive Analytics",
+                reportsMainTitle: "Ecosystem Reports & Statements",
+                reportsMainSub: "Review weekly and monthly performance across education, routine, and finance.",
+                eduProgressReport: "Education & Study Progress",
+                financeSummaryReport: "Financial Savings & Budget",
+                settingsHeaderTag: "Central Control",
+                settingsMainTitle: "Global Settings & Custom Feature Builder",
+                settingsMainSub: "Customize your app, add new homepage feature buttons, manage data backup and restore.",
+                builderTitle: "Custom Feature / Button Builder",
+                builderSub: "Add brand new feature buttons to your homepage instantly without modifying source code.",
+                labelFeatureName: "Feature Name",
+                labelFeatureIcon: "Icon Class (FontAwesome)",
+                labelFeatureCategory: "Homepage Category",
+                labelFeatureDesc: "Short Description",
+                btnSaveFeature: "Save & Add to Homepage",
+                backupTitle: "Data Backup & Restore",
+                backupSub: "Export all your ILMORA data as a JSON file or restore from a backup.",
+                profileRole: "Dakhil 2027 Candidate & Life Manager",
+                labelFullName: "Full Name",
+                labelInstitution: "Educational Institution",
+                labelClassSession: "Class / Session",
+                labelBio: "Short Biography / Goals",
+                btnSaveProfile: "Save Profile Changes",
+                alarmModalTitle: "Advanced Study Timer & Alarm",
+                alarmModalSub: "Focus session for Dakhil preparation. Timer runs in browser session.",
+                btnStartTimer: "Start",
+                btnPauseTimer: "Pause",
+                btnResetTimer: "Reset",
+                modalAddActivityTitle: "Add Daily Activity / Task",
+                labelActName: "Activity Name",
+                labelCategory: "Category",
+                labelDuration: "Duration (Hours)",
+                labelStatus: "Completion Status",
+                btnCancel: "Cancel",
+                btnSave: "Save Activity",
+                modalAddIncomeTitle: "Add Income Record",
+                labelTitle: "Income Source / Title",
+                labelAmount: "Amount (BDT ৳)",
+                modalAddExpenseTitle: "Add Expense Record"
+            },
+            bn: {
+                badgePro: "প্রো",
+                tagline: "জীবনের প্রতিটি অংশের জন্য একটি প্ল্যাটফর্ম।",
+                navMenu: "নেভিগেশন মেনু",
+                secMain: "প্রধান কমান্ড",
+                navHome: "কমান্ড সেন্টার",
+                navEducation: "শিক্ষা ও দাখিল ২০২৭",
+                navLibrary: "ডিজিটাল লাইব্রেরি",
+                navIslamic: "ইসলামিক কর্নার ও সালাত",
+                navRoutine: "দৈনিক রুটিন ও সময়",
+                navFinance: "আমার ওয়ালেট ও হিসাব",
+                secTools: "ব্যবস্থাপনা ও টুলস",
+                navNotes: "নোট ও নোটিশ",
+                navReports: "রিপোর্ট ও অ্যানালিটিক্স",
+                navSettings: "গ্লোবাল সেটিংস ও বিল্ডার",
+                secCustom: "কাস্টম ফিচার",
+                storageStatus: "লোকাল স্টোরেজ",
+                storageDesc: "ব্রাউজারে নিরাপদে সংরক্ষিত।",
+                welcomeBadge: "ব্যক্তিগত ইকোসিস্টেম সক্রিয়",
+                welcomeTitle: "স্বাগতম, সফল শিক্ষার্থী!",
+                welcomeSub: "আপনার পড়াশোনা, রুটিন, ইসলামিক আমল এবং হিসাব-নিকাশ এক জায়গায় পরিচালনা করুন।",
+                btnAddActivity: "কার্যক্রম / কাজ যোগ করুন",
+                btnStudyNow: "স্টাডি সেন্টার",
+                noticeTitle: "গুরুত্বপূর্ণ নোটিশ ও রিমাইন্ডার",
+                viewAll: "সব দেখুন →",
+                statStudyTime: "আজকের পড়ার সময়",
+                statPrayer: "আদায়কৃত সালাত",
+                statBalance: "ওয়ালেট ব্যালেন্স",
+                statTasks: "সম্পন্ন কাজ",
+                secEduTitle: "শিক্ষা ও দাখিল ২০২৭ সেন্টার",
+                secLifeTitle: "দৈনিক জীবন ও রুটিন",
+                secIslamicTitle: "ইসলামিক কর্নার ও সালাত",
+                secFinanceTitle: "অর্থনৈতিক ব্যবস্থাপনা",
+                secPersonalTitle: "ব্যক্তিগত ব্যবস্থাপনা ও কাস্টম টুলস",
+                secCustomTitle: "কাস্টম যোগ করা ফিচারসমূহ",
+                eduHeaderTag: "উন্নত একাডেমিক সেন্টার",
+                eduMainTitle: "শিক্ষা ও দাখিল ২০২৭ লার্নিং হাব",
+                eduMainSub: "বিষয়, ভিডিও লেকচার, অনলাইন ক্লাস এবং দাখিল প্রস্তুতি সামগ্রী পরিচালনা করুন।",
+                btnAddSubject: "বিষয় যোগ করুন",
+                btnAddResource: "লেকচার / রিসোর্স যোগ করুন",
+                dakhilStarterTitle: "যাচাইকৃত দাখিল ২০২৭ অনলাইন মাদ্রাসা ও প্ল্যাটফর্ম",
+                dakhilStarterSub: "দাখিল কারিকুলাম প্রস্তুতির জন্য অফিসিয়াল ও যাচাইকৃত পোর্টাল।",
+                subjectManagerTitle: "বিষয় ও কোর্স ড্যাশবোর্ড পরিচালনা",
+                resourceDirTitle: "সংরক্ষিত স্টাডি রিসোর্স ও লেকচারসমূহ",
+                thTitle: "শিরোনাম",
+                thSubject: "বিষয়",
+                thType: "ধরণ",
+                thLink: "লিংক / উৎস",
+                thAction: "কার্যক্রম",
+                thCategory: "ক্যাটাগরি",
+                thDate: "তারিখ",
+                thAmount: "পরিমাণ",
+                libHeaderTag: "ডিজিটাল লাইব্রেরি ও প্রকাশনা",
+                libMainTitle: "ডিজিটাল লাইব্রেরি ও গাইডবুক",
+                libMainSub: "পাঠ্যবই, গাইডবুক এবং প্রকাশনা সামগ্রী (আল-ফাতাহ, লেকচার, দারসুন)।",
+                btnAddBook: "বই / প্রকাশনা যোগ করুন",
+                pubDesc1: "দাখিল প্রস্তুতির জন্য অনুমোদিত মডেল টেস্ট ও সাজেশন গাইড।",
+                pubDesc2: "পূর্ণাঙ্গ পাঠ্যবই গাইড এবং বোর্ড প্রশ্ন বিশ্লেষণ।",
+                pubDesc3: "বিশেষায়িত আরবি ব্যাকরণ, ফিকহ ও হাদিস অধ্যয়নের সামগ্রী।",
+                viewPublisherBooks: "বইগুলো দেখুন →",
+                libraryCatalog: "ডিজিটাল লাইব্রেরি ক্যাটালগ",
+                islamicHeaderTag: "আধ্যাত্মিক ব্যবস্থাপনা",
+                islamicMainTitle: "ইসলামিক কর্নার ও সালাত ট্র্যাকার",
+                islamicMainSub: "দৈনিক সালাত, কুরআন, দুআ, হাদিস এবং ইসলামিক নোট।",
+                btnAddIslamic: "দুআ / হাদিস যোগ করুন",
+                prayerTrackerTitle: "দৈনিক সালাত ট্র্যাকার (৫ ওয়াক্ত)",
+                islamicCollectionTitle: "কুরআন, দুআ ও হাদিস সংগ্রহ",
+                routineHeaderTag: "সময় ও জীবন অ্যানালিটিক্স",
+                routineMainTitle: "দৈনিক রুটিন ও সময় ট্র্যাকার",
+                routineMainSub: "পড়ার সময়, ঘুম, সালাত, কার্যক্রম এবং পরিকল্পনা বনাম বাস্তব রূপায়ণ ট্র্যাক করুন।",
+                statProductive: "উৎপাদনশীল সময়",
+                statSleep: "ঘুমের সময়",
+                statCompletedTasks: "সম্পন্ন কাজ",
+                statMissedTasks: "ম মিস বা পর্যালোচ্য",
+                activityLogTitle: "আজকের কার্যক্রম লগ ও সম্পন্ন/অসম্পন্ন বিষয়",
+                financeHeaderTag: "ব্যক্তিগত ফাইন্যান্স ম্যানেজার",
+                financeMainTitle: "আমার ওয়ালেট ও আর্থিক হিসাব",
+                financeMainSub: "আয়, ব্যয়, ক্যাটাগরি বিশ্লেষণ এবং সঞ্চয় নিরাপদভাবে ট্র্যাক করুন।",
+                btnAddIncome: "আয় যোগ করুন",
+                btnAddExpense: "ব্যয় যোগ করুন",
+                finTotalIncome: "মোট আয়",
+                finTotalExpense: "মোট ব্যয়",
+                finNetBalance: "বর্তমান ব্যালেন্স",
+                transactionHistory: "সাম্প্রতিক লেনদেন ও স্টেটমেন্ট",
+                notesHeaderTag: "তথ্য আর্কাইভ",
+                notesMainTitle: "ব্যক্তিগত নোট ও নোটিশ বোর্ড",
+                notesMainSub: "পড়ার নোট, রিমাইন্ডার, নোটিশ এবং গুরুত্বপূর্ণ তথ্য সাজিয়ে রাখুন।",
+                btnAddNote: "নোট / নোটিশ যোগ করুন",
+                noticesColTitle: "গুরুত্বপূর্ণ নোটিশ ও রিমাইন্ডার",
+                notesColTitle: "পড়া ও ব্যক্তিগত নোট",
+                reportsHeaderTag: "সার্বিক অ্যানালিটিক্স",
+                reportsMainTitle: "ইকোসিস্টেম রিপোর্ট ও স্টেটমেন্ট",
+                reportsMainSub: "শিক্ষা, রুটিন এবং ফাইন্যান্সের সাপ্তাহিক ও মাসিক পারফরম্যান্স পর্যালোচনা করুন।",
+                eduProgressReport: "শিক্ষা ও পড়াশোনার অগ্রগতি",
+                financeSummaryReport: "আর্থিক সঞ্চয় ও বাজেট",
+                settingsHeaderTag: "সেন্ট্রাল কন্ট্রোল",
+                settingsMainTitle: "গ্লোবাল সেটিংস ও কাস্টম ফিচার বিল্ডার",
+                settingsMainSub: "অ্যাপ কাস্টমাইজ করুন, হোমপেজে নতুন বাটন যোগ করুন এবং ডাটা ব্যাকআপ নিন।",
+                builderTitle: "কাস্টম ফিচার / বাটন বিল্ডার",
+                builderSub: "সোর্স কোড পরিবর্তন না করেই হোমপেজে নতুন ফিচার বাটন যুক্ত করুন।",
+                labelFeatureName: "ফিচারের নাম",
+                labelFeatureIcon: "আইকন ক্লাস (FontAwesome)",
+                labelFeatureCategory: "হোমপেজ ক্যাটাগরি",
+                labelFeatureDesc: "সংক্ষিপ্ত বিবরণ",
+                btnSaveFeature: "সংরক্ষণ করুন ও হোমপেজে যোগ করুন",
+                backupTitle: "ডাটা ব্যাকআপ ও রিস্টোর",
+                backupSub: "আপনার সমস্ত ILMORA ডাটা JSON ফাইল হিসেবে এক্সপোর্ট বা রিস্টোর করুন।",
+                profileRole: "দাখিল ২০২৭ পরীক্ষার্থী ও জীবন ব্যবস্থাপক",
+                labelFullName: "পূর্ণ নাম",
+                labelInstitution: "শিক্ষাপ্রতিষ্ঠান",
+                labelClassSession: "শ্রেণি / সেশন",
+                labelBio: "সংক্ষিপ্ত জীবনী / লক্ষ্য",
+                btnSaveProfile: "প্রোফাইল পরিবর্তন সংরক্ষণ করুন",
+                alarmModalTitle: "উন্নত স্টাডি টাইমার ও অ্যালার্ম",
+                alarmModalSub: "দাখিল প্রস্তুতির জন্য ফোকাস সেশন। ব্রাউজারে টাইমার চলবে।",
+                btnStartTimer: "শুরু",
+                btnPauseTimer: "বিরতি",
+                btnResetTimer: "রিসেট",
+                modalAddActivityTitle: "দৈনিক কার্যক্রম / কাজ যোগ করুন",
+                labelActName: "কাজের নাম",
+                labelCategory: "ক্যাটাগরি",
+                labelDuration: "সময়কাল (ঘণ্টা)",
+                labelStatus: "সম্পন্নতার অবস্থা",
+                btnCancel: "বাতিল",
+                btnSave: "সংরক্ষণ করুন",
+                modalAddIncomeTitle: "আয়ের হিসাব যোগ করুন",
+                labelTitle: "আয়ের উৎস / শিরোনাম",
+                labelAmount: "পরিমাণ (টাকা ৳)",
+                modalAddExpenseTitle: "ব্যয়ের হিসাব যোগ করুন"
+            }
+        };
+
+        let currentLang = localStorage.getItem('ilmora_lang') || 'bn';
+        let currentTheme = localStorage.getItem('ilmora_theme') || 'light';
+
+        // --- CORE APPLICATION DATA STORE ---
+        let appData = JSON.parse(localStorage.getItem('ilmora_store')) || {
+            profile: {
+                name: "Achiever Student",
+                institution: "Ideal Madrasha",
+                classSession: "Dakhil 2027",
+                bio: "Striving for excellence in Islamic and modern education."
+            },
+            subjects: [
+                { id: 1, name: "Arabic First Paper", icon: "fa-solid fa-book-quran", desc: "Dakhil 2027 Arabic text & grammar" },
+                { id: 2, name: "Aqeedah & Fiqh", icon: "fa-solid fa-mosque", desc: "Islamic jurisprudence & creed" },
+                { id: 3, name: "Mathematics", icon: "fa-solid fa-calculator", desc: "Algebra, geometry & trigonometry" },
+                { id: 4, name: "English For Today", icon: "fa-solid fa-globe", desc: "Grammar & comprehension" },
+                { id: 5, name: "Quran Majeed", icon: "fa-solid fa-book-open", desc: "Tilawat & Tajweed rules" }
+            ],
+            studyResources: [
+                { id: 1, title: "Dakhil 2027 Arabic Live Class 01", subject: "Arabic First Paper", type: "Video", link: "https://www.youtube.com/watch?v=d3pJY5LRzJc" },
+                { id: 2, title: "Fiqh Chapter 3 Detailed Notes", subject: "Aqeedah & Fiqh", type: "PDF", link: "https://www.attadrees.com/" }
+            ],
+            libraryBooks: [
+                { id: 1, title: "Al-Fatah Dakhil Model Test 2027", publisher: "Al-Fatah", category: "Exam Prep", link: "#" },
+                { id: 2, title: "Lecture English Grammar & Composition", publisher: "Lecture", category: "English", link: "#" },
+                { id: 3, title: "Darsun Arabic Grammar Guide", publisher: "Darsun", category: "Arabic", link: "#" }
+            ],
+            islamicContent: [
+                { id: 1, arabic: "رَبِّ زِدْنِي عِلْمًا", meaning: "हे मेरे رب! मेरे ज्ञान में वृद्धि फरमाइये। (হে আমার রব! আমার জ্ঞান বৃদ্ধি করে দিন।)", category: "Dua" },
+                { id: 2, arabic: "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ", meaning: "तुम में से सर्वश्रेष्ठ वह है जो कुरान सीखे और सिखाए।", category: "Hadith" }
+            ],
+            prayers: { Fajr: true, Dhuhr: true, Asr: true, Maghrib: true, Isha: false },
+            activities: [
+                { id: 1, name: "Quran Tilawat & Hifz", category: "Quran", duration: 0.5, status: "Completed" },
+                { id: 2, name: "Arabic Grammar Study", category: "Study", duration: 1.5, status: "Completed" },
+                { id: 3, name: "Mathematics Practice", category: "Study", duration: 2.0, status: "Completed" }
+            ],
+            incomes: [
+                { id: 1, title: "Tutoring Income", amount: 5000, date: "2026-03-01", category: "Education" },
+                { id: 2, title: "Family Allowance", amount: 20000, date: "2026-03-02", category: "Family" }
+            ],
+            expenses: [
+                { id: 1, title: "Books & Guides", amount: 1250, date: "2026-03-03", category: "Education" },
+                { id: 2, title: "Internet Bill", amount: 800, date: "2026-03-04", category: "Education" }
+            ],
+            notes: [
+                { id: 1, title: "Dakhil Exam Schedule Notice", type: "Notice", content: "Exam prep starts from next week. Focus on Arabic and Math." },
+                { id: 2, title: "Personal Study Goal", type: "Note", content: "Finish 5 chapters of Fiqh by Friday." }
+            ],
+            customFeatures: []
+        };
+
+        // Save to LocalStorage
+        function saveData() {
+            localStorage.setItem('ilmora_store', JSON.stringify(appData));
+        }
+
+        // --- INITIALIZATION & RENDERING ---
+        document.addEventListener('DOMContentLoaded', () => {
+            applyTheme();
+            applyLanguage();
+            renderAllViews();
+        });
+
+        function switchView(viewId) {
+            document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
+            const target = document.getElementById(`view-${viewId}`);
+            if (target) target.classList.remove('hidden');
+
+            document.querySelectorAll('.sidebar-link').forEach(link => link.classList.remove('bg-brand-50', 'dark:bg-slate-700', 'text-brand-600'));
+            const activeLink = document.querySelector(`[data-view="${viewId}"]`);
+            if (activeLink) activeLink.classList.add('bg-brand-50', 'dark:bg-slate-700', 'text-brand-600');
+
+            // Close mobile sidebar if open
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        }
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            localStorage.setItem('ilmora_theme', currentTheme);
+            applyTheme();
+        }
+
+        function applyTheme() {
+            if (currentTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeIcon').className = "fa-solid fa-sun text-amber-400";
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('themeIcon').className = "fa-solid fa-moon";
+            }
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'bn' ? 'en' : 'bn';
+            localStorage.setItem('ilmora_lang', currentLang);
+            applyLanguage();
+            renderAllViews();
+        }
+
+        function applyLanguage() {
+            document.getElementById('currentLangLabel').innerText = currentLang.toUpperCase();
+            document.documentElement.setAttribute('lang', currentLang);
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.innerText = translations[currentLang][key];
+                }
+            });
+        }
+
+        function renderAllViews() {
+            renderProfile();
+            renderHomeButtons();
+            renderSubjects();
+            renderStudyResources();
+            renderLibraryBooks();
+            renderIslamicContent();
+            renderPrayerChecklist();
+            renderActivities();
+            renderFinance();
+            renderNotesAndNotices();
+            renderCustomSidebarAndHomepage();
+        }
+
+        // --- PROFILE RENDERING ---
+        function renderProfile() {
+            const p = appData.profile;
+            document.getElementById('profileDisplayName').innerText = p.name;
+            document.getElementById('homeGreetingTitle').innerText = (currentLang === 'bn' ? 'স্বাগতম, ' : 'Welcome Back, ') + p.name + '!';
+            document.getElementById('pName').value = p.name;
+            document.getElementById('pInstitution').value = p.institution;
+            document.getElementById('pClass').value = p.classSession;
+            document.getElementById('pBio').value = p.bio;
+        }
+
+        function handleSaveProfile(e) {
+            e.preventDefault();
+            appData.profile.name = document.getElementById('pName').value;
+            appData.profile.institution = document.getElementById('pInstitution').value;
+            appData.profile.classSession = document.getElementById('pClass').value;
+            appData.profile.bio = document.getElementById('pBio').value;
+            saveData();
+            renderProfile();
+            alert(currentLang === 'bn' ? 'প্রোফাইল সফলভাবে সংরক্ষিত হয়েছে!' : 'Profile updated successfully!');
+        }
+
+        // --- HOMEPAGE BUTTONS GRID ---
+        function renderHomeButtons() {
+            // Section A: Education
+            const eduContainer = document.getElementById('homeEduButtons');
+            eduContainer.innerHTML = `
+                <div onclick="switchView('education')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-graduation-cap text-2xl text-blue-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'স্টাডি ড্যাশবোর্ড' : 'Study Dashboard'}</span>
+                </div>
+                <div onclick="switchView('education')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-book-bookmark text-2xl text-blue-600 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'সকল বিষয়' : 'All Subjects'}</span>
+                </div>
+                <div onclick="switchView('education')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-video text-2xl text-emerald-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'ভিডিও ক্লাস' : 'Video Classes'}</span>
+                </div>
+                <div onclick="switchView('library')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-book text-2xl text-amber-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'ডিজিটাল লাইব্রেরি' : 'Digital Library'}</span>
+                </div>
+                <div onclick="openModal('alarmModal')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-stopwatch text-2xl text-purple-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'স্টাডি অ্যালার্ম' : 'Study Alarm'}</span>
+                </div>
+                <div onclick="switchView('education')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-award text-2xl text-amber-600 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'দাখিল ২০২৭ সেন্টার' : 'Dakhil 2027 Hub'}</span>
+                </div>
+            `;
+
+            // Section B: Personal Life
+            const lifeContainer = document.getElementById('homeLifeButtons');
+            lifeContainer.innerHTML = `
+                <div onclick="switchView('routine')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-clock-rotate-left text-2xl text-emerald-600 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'দৈনিক রুটিন' : 'Daily Routine'}</span>
+                </div>
+                <div onclick="switchView('routine')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-business-time text-2xl text-blue-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'টাইম ট্র্যাকার' : 'Time Tracker'}</span>
+                </div>
+                <div onclick="switchView('routine')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-clipboard-check text-2xl text-emerald-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'আজ কি করলাম' : 'What I Did'}</span>
+                </div>
+                <div onclick="switchView('routine')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-list-check text-2xl text-indigo-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'টাস্ক ম্যানেজার' : 'Task Manager'}</span>
+                </div>
+                <div onclick="switchView('routine')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-calendar-days text-2xl text-amber-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'কার্যক্রম লগ' : 'Activity Log'}</span>
+                </div>
+                <div onclick="switchView('notes')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-book-open-reader text-2xl text-rose-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'ডায়েরি ও নোট' : 'Daily Journal'}</span>
+                </div>
+            `;
+
+            // Section C: Islamic Life
+            const islamicContainer = document.getElementById('homeIslamicButtons');
+            islamicContainer.innerHTML = `
+                <div onclick="switchView('islamic')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-mosque text-2xl text-purple-600 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'ইসলামিক কর্নার' : 'Islamic Corner'}</span>
+                </div>
+                <div onclick="switchView('islamic')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-book-quran text-2xl text-purple-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'কুরআন ও সুরা' : 'Quran & Surah'}</span>
+                </div>
+                <div onclick="switchView('islamic')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-hands-praying text-2xl text-purple-400 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'দুআ ও হাদিস' : 'Dua & Hadith'}</span>
+                </div>
+                <div onclick="switchView('islamic')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-kaaba text-2xl text-amber-600 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'সালাত ট্র্যাকার' : 'Prayer Tracker'}</span>
+                </div>
+                <div onclick="switchView('islamic')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-shield-heart text-2xl text-rose-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'যিকির ও আজকার' : 'Dhikr & Azkar'}</span>
+                </div>
+                <div onclick="switchView('islamic')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-book-bookmark text-2xl text-blue-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'ইসলামিক নোট' : 'Islamic Notes'}</span>
+                </div>
+            `;
+
+            // Section D: Financial Management
+            const financeContainer = document.getElementById('homeFinanceButtons');
+            financeContainer.innerHTML = `
+                <div onclick="switchView('finance')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-wallet text-2xl text-emerald-600 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'আমার ওয়ালেট' : 'My Wallet'}</span>
+                </div>
+                <div onclick="switchView('finance')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-arrow-down-long text-2xl text-emerald-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'আয় ব্যবস্থাপনা' : 'Income'}</span>
+                </div>
+                <div onclick="switchView('finance')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-arrow-up-long text-2xl text-rose-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'ব্যয় ব্যবস্থাপনা' : 'Expenses'}</span>
+                </div>
+                <div onclick="switchView('finance')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-file-invoice-dollar text-2xl text-blue-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'মাসিক স্টেটমেন্ট' : 'Monthly Statement'}</span>
+                </div>
+                <div onclick="switchView('finance')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-piggy-bank text-2xl text-amber-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'সঞ্চয় ও বাজেট' : 'Savings Goals'}</span>
+                </div>
+            `;
+
+            // Section E: Personal Management & Tools
+            const personalContainer = document.getElementById('homePersonalButtons');
+            personalContainer.innerHTML = `
+                <div onclick="switchView('profile')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-user-gear text-2xl text-blue-600 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'আমার প্রোফাইল' : 'My Profile'}</span>
+                </div>
+                <div onclick="switchView('notes')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-note-sticky text-2xl text-yellow-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'ব্যক্তিগত নোট' : 'Personal Notes'}</span>
+                </div>
+                <div onclick="switchView('notes')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-bullhorn text-2xl text-amber-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'নোটিশ বোর্ড' : 'Notice Board'}</span>
+                </div>
+                <div onclick="switchView('reports')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-chart-pie text-2xl text-indigo-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'রিপোর্ট ও অ্যানালিটিক্স' : 'Reports & Stats'}</span>
+                </div>
+                <div onclick="switchView('settings')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-puzzle-piece text-2xl text-brand-600 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'কাস্টম ফিচার বিল্ডার' : 'Feature Builder'}</span>
+                </div>
+                <div onclick="switchView('settings')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="fa-solid fa-gear text-2xl text-slate-500 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${currentLang === 'bn' ? 'সেটিংস' : 'Settings'}</span>
+                </div>
+            `;
+        }
+
+        // --- SUBJECT MANAGEMENT ---
+        function renderSubjects() {
+            const container = document.getElementById('subjectsGridContainer');
+            container.innerHTML = appData.subjects.map(sub => `
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="w-12 h-12 rounded-2xl bg-brand-50 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 flex items-center justify-center text-xl font-bold">
+                                <i class="${sub.icon}"></i>
+                            </div>
+                            <button onclick="deleteSubject(${sub.id})" class="text-slate-400 hover:text-rose-500"><i class="fa-solid fa-trash text-xs"></i></button>
+                        </div>
+                        <h4 class="font-bold text-slate-900 dark:text-white text-base mb-1">${sub.name}</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">${sub.desc}</p>
+                    </div>
+                    <button onclick="filterResourcesBySubject('${sub.name}')" class="w-full py-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold hover:bg-brand-600 hover:text-white transition">
+                        ${currentLang === 'bn' ? 'রিসোর্স দেখুন' : 'View Resources'}
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function deleteSubject(id) {
+            if (confirm(currentLang === 'bn' ? 'বিষয়টি মুছে ফেলতে চান?' : 'Delete this subject?')) {
+                appData.subjects = appData.subjects.filter(s => s.id !== id);
+                saveData();
+                renderSubjects();
+            }
+        }
+
+        // --- STUDY RESOURCES ---
+        function renderStudyResources() {
+            const tbody = document.getElementById('studyResourcesTableBody');
+            tbody.innerHTML = appData.studyResources.map(res => `
+                <tr>
+                    <td class="p-3 font-medium text-slate-900 dark:text-white">${res.title}</td>
+                    <td class="p-3 text-slate-600 dark:text-slate-300">${res.subject}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 rounded-full text-xs font-bold">${res.type}</span></td>
+                    <td class="p-3"><a href="${res.link}" target="_blank" class="text-brand-600 hover:underline text-xs truncate max-w-xs block">${res.link}</a></td>
+                    <td class="p-3 text-right">
+                        <button onclick="deleteStudyResource(${res.id})" class="text-slate-400 hover:text-rose-500"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteStudyResource(id) {
+            appData.studyResources = appData.studyResources.filter(r => r.id !== id);
+            saveData();
+            renderStudyResources();
+        }
+
+        // --- DIGITAL LIBRARY ---
+        function renderLibraryBooks() {
+            const grid = document.getElementById('libraryBooksGrid');
+            grid.innerHTML = appData.libraryBooks.map(book => `
+                <div class="bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                    <div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full">${book.publisher}</span>
+                        <h4 class="font-bold text-slate-900 dark:text-white text-sm mt-2 mb-1">${book.title}</h4>
+                        <p class="text-xs text-slate-500">${book.category}</p>
+                    </div>
+                    <a href="${book.link}" target="_blank" class="mt-4 text-xs font-bold text-brand-600 hover:underline flex items-center gap-1">
+                        <i class="fa-solid fa-book-open"></i> Read / Access
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function filterLibraryByPublisher(pubName) {
+            alert((currentLang === 'bn' ? 'প্রকাশক: ' : 'Publisher: ') + pubName);
+        }
+
+        // --- ISLAMIC CORNER & PRAYERS ---
+        function renderIslamicContent() {
+            const grid = document.getElementById('islamicContentGrid');
+            grid.innerHTML = appData.islamicContent.map(item => `
+                <div class="bg-purple-50/50 dark:bg-purple-950/20 p-5 rounded-2xl border border-purple-100 dark:border-purple-900/40">
+                    <span class="text-[10px] font-bold px-2.5 py-0.5 bg-purple-200 text-purple-800 dark:bg-purple-900 dark:text-purple-300 rounded-full">${item.category}</span>
+                    <p class="font-arabic text-xl text-purple-900 dark:text-purple-200 text-right my-3">${item.arabic}</p>
+                    <p class="text-xs text-slate-700 dark:text-slate-300 font-medium">${item.meaning}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderPrayerChecklist() {
+            const grid = document.getElementById('prayerChecklistGrid');
+            const prayersList = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+            grid.innerHTML = prayersList.map(p => `
+                <div onclick="togglePrayer('${p}')" class="p-4 rounded-2xl border cursor-pointer text-center transition ${appData.prayers[p] ? 'bg-purple-600 text-white border-purple-600 shadow-md' : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'}">
+                    <i class="fa-solid fa-kaaba text-xl mb-2"></i>
+                    <h4 class="font-bold text-sm">${p}</h4>
+                    <p class="text-[10px] mt-1 opacity-80">${appData.prayers[p] ? 'Completed' : 'Pending'}</p>
+                </div>
+            `).join('');
+        }
+
+        function togglePrayer(p) {
+            appData.prayers[p] = !appData.prayers[p];
+            saveData();
+            renderPrayerChecklist();
+            updateStats();
+        }
+
+        // --- DAILY ROUTINE & TIME TRACKER ---
+        function renderActivities() {
+            const container = document.getElementById('activityListContainer');
+            container.innerHTML = appData.activities.map(act => `
+                <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700/50 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">${act.name}</h4>
+                            <p class="text-xs text-slate-500">${act.category} • ${act.duration} Hours</p>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold ${act.status === 'Completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">
+                        ${act.status}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        function handleCreateActivity(e) {
+            e.preventDefault();
+            const newAct = {
+                id: Date.now(),
+                name: document.getElementById('actName').value,
+                category: document.getElementById('actCategory').value,
+                duration: parseFloat(document.getElementById('actDuration').value),
+                status: document.getElementById('actStatus').value
+            };
+            appData.activities.push(newAct);
+            saveData();
+            renderActivities();
+            closeModal('addActivityModal');
+            e.target.reset();
+        }
+
+        // --- WALLET & FINANCE ---
+        function renderFinance() {
+            const totalInc = appData.incomes.reduce((acc, i) => acc + i.amount, 0);
+            const totalExp = appData.expenses.reduce((acc, e) => acc + e.amount, 0);
+            const balance = totalInc - totalExp;
+
+            document.getElementById('finTotalIncomeDisplay').innerText = `৳${totalInc.toLocaleString()}`;
+            document.getElementById('finTotalExpenseDisplay').innerText = `৳${totalExp.toLocaleString()}`;
+            document.getElementById('finNetBalanceDisplay').innerText = `৳${balance.toLocaleString()}`;
+            document.getElementById('statWalletBalance').innerText = `৳${balance.toLocaleString()}`;
+
+            const tbody = document.getElementById('transactionsTableBody');
+            const allTx = [
+                ...appData.incomes.map(i => ({ ...i, type: 'Income', badgeColor: 'bg-emerald-100 text-emerald-700' })),
+                ...appData.expenses.map(e => ({ ...e, type: 'Expense', badgeColor: 'bg-rose-100 text-rose-700' }))
+            ].sort((a,b) => new Date(b.date) - new Date(a.date));
+
+            tbody.innerHTML = allTx.map(tx => `
+                <tr>
+                    <td class="p-3 font-medium text-slate-900 dark:text-white">${tx.title}</td>
+                    <td class="p-3 text-slate-600 dark:text-slate-300">${tx.category}</td>
+                    <td class="p-3 text-slate-500">${tx.date}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${tx.badgeColor}">${tx.type}</span></td>
+                    <td class="p-3 text-right font-bold ${tx.type === 'Income' ? 'text-emerald-600' : 'text-rose-600'}">৳${tx.amount.toLocaleString()}</td>
+                    <td class="p-3 text-right"><button onclick="deleteTx(${tx.id})" class="text-slate-400 hover:text-rose-500"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>
+            `).join('');
+        }
+
+        function handleCreateIncome(e) {
+            e.preventDefault();
+            appData.incomes.push({
+                id: Date.now(),
+                title: document.getElementById('incTitle').value,
+                amount: parseFloat(document.getElementById('incAmount').value),
+                date: new Date().toISOString().split('T')[0],
+                category: 'Other'
+            });
+            saveData();
+            renderFinance();
+            closeModal('addIncomeModal');
+            e.target.reset();
+        }
+
+        function handleCreateExpense(e) {
+            e.preventDefault();
+            appData.expenses.push({
+                id: Date.now(),
+                title: document.getElementById('expTitle').value,
+                amount: parseFloat(document.getElementById('expAmount').value),
+                date: new Date().toISOString().split('T')[0],
+                category: document.getElementById('expCategory').value
+            });
+            saveData();
+            renderFinance();
+            closeModal('addExpenseModal');
+            e.target.reset();
+        }
+
+        function deleteTx(id) {
+            appData.incomes = appData.incomes.filter(i => i.id !== id);
+            appData.expenses = appData.expenses.filter(e => e.id !== id);
+            saveData();
+            renderFinance();
+        }
+
+        // --- NOTES & NOTICES ---
+        function renderNotesAndNotices() {
+            const notices = appData.notes.filter(n => n.type === 'Notice');
+            const notes = appData.notes.filter(n => n.type === 'Note');
+
+            document.getElementById('noticesListContainer').innerHTML = notices.map(n => `
+                <div class="p-4 bg-amber-50 dark:bg-amber-950/30 rounded-2xl border border-amber-200 dark:border-amber-900/50">
+                    <h4 class="font-bold text-amber-900 dark:text-amber-300 text-sm mb-1">${n.title}</h4>
+                    <p class="text-xs text-slate-700 dark:text-slate-300">${n.content}</p>
+                </div>
+            `).join('');
+
+            document.getElementById('notesListContainer').innerHTML = notes.map(n => `
+                <div class="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <h4 class="font-bold text-slate-900 dark:text-white text-sm mb-1">${n.title}</h4>
+                    <p class="text-xs text-slate-600 dark:text-slate-300">${n.content}</p>
+                </div>
+            `).join('');
+
+            if (notices.length > 0) {
+                document.getElementById('homeNoticeText').innerText = notices[0].content;
+            }
+        }
+
+        // --- CUSTOM FEATURE BUILDER ---
+        function handleCreateCustomFeature(e) {
+            e.preventDefault();
+            const cf = {
+                id: Date.now(),
+                name: document.getElementById('cfName').value,
+                icon: document.getElementById('cfIcon').value,
+                category: document.getElementById('cfCategory').value,
+                desc: document.getElementById('cfDesc').value
+            };
+            appData.customFeatures.push(cf);
+            saveData();
+            renderCustomSidebarAndHomepage();
+            alert(currentLang === 'bn' ? 'কাস্টম ফিচার সফলভাবে যোগ করা হয়েছে!' : 'Custom feature added successfully!');
+            e.target.reset();
+            switchView('home');
+        }
+
+        function renderCustomSidebarAndHomepage() {
+            const sidebarContainer = document.getElementById('sidebarCustomLinks');
+            const homeContainerGrid = document.getElementById('homeCustomButtonsGrid');
+            const homeSection = document.getElementById('homeCustomSectionContainer');
+
+            if (appData.customFeatures.length === 0) {
+                homeSection.classList.add('hidden');
+                sidebarContainer.innerHTML = `<p class="text-xs text-slate-400 px-3">No custom features yet.</p>`;
+                return;
+            }
+
+            homeSection.classList.remove('hidden');
+            sidebarContainer.innerHTML = appData.customFeatures.map(cf => `
+                <button onclick="alert('Opening custom feature: ${cf.name}')" class="w-full flex items-center space-x-3 px-3 py-2 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-brand-50 transition">
+                    <i class="${cf.icon} w-5 text-brand-600"></i>
+                    <span>${cf.name}</span>
+                </button>
+            `).join('');
+
+            homeContainerGrid.innerHTML = appData.customFeatures.map(cf => `
+                <div onclick="alert('Opening custom feature: ${cf.name}')" class="app-card bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer text-center flex flex-col items-center justify-center">
+                    <i class="${cf.icon} text-2xl text-brand-600 mb-2"></i>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${cf.name}</span>
+                </div>
+            `).join('');
+        }
+
+        // --- BACKUP & RESTORE ---
+        function exportDataBackup() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "ilmora_backup_" + new Date().toISOString().split('T')[0] + ".json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importDataBackup(e) {
+            const fileReader = new FileReader();
+            if (e.target.files[0]) {
+                fileReader.readAsText(e.target.files[0], "UTF-8");
+                fileReader.onload = (event) => {
+                    try {
+                        appData = JSON.parse(event.target.result);
+                        saveData();
+                        renderAllViews();
+                        alert(currentLang === 'bn' ? 'ব্যাকআপ সফলভাবে রিস্টোর করা হয়েছে!' : 'Backup restored successfully!');
+                    } catch (err) {
+                        alert('Invalid backup file format.');
+                    }
+                };
+            }
+        }
+
+        // --- STUDY ALARM TIMER ---
+        let alarmInterval = null;
+        let timeLeft = 25 * 60;
+
+        function startStudyAlarm() {
+            if (alarmInterval) return;
+            document.getElementById('alarmActiveIndicator').classList.remove('hidden');
+            alarmInterval = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    let m = Math.floor(timeLeft / 60);
+                    let s = timeLeft % 60;
+                    document.getElementById('alarmCountdownDisplay').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                } else {
+                    clearInterval(alarmInterval);
+                    alert(currentLang === 'bn' ? 'স্টাডি সেশন সম্পন্ন হয়েছে!' : 'Study session completed!');
+                }
+            }, 1000);
+        }
+
+        function pauseStudyAlarm() {
+            clearInterval(alarmInterval);
+            alarmInterval = null;
+        }
+
+        function resetStudyAlarm() {
+            clearInterval(alarmInterval);
+            alarmInterval = null;
+            timeLeft = 25 * 60;
+            document.getElementById('alarmCountdownDisplay').innerText = "25:00";
+            document.getElementById('alarmActiveIndicator').classList.add('hidden');
+        }
+
+        // --- MODAL UTILITIES ---
+        function openModal(modalId) {
+            const m = document.getElementById(modalId);
+            if (m) m.classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            const m = document.getElementById(modalId);
+            if (m) m.classList.add('hidden');
+        }
+
+        function updateStats() {
+            // Helper to update dynamic counters
+            let completedPrayers = Object.values(appData.prayers).filter(Boolean).length;
+            document.getElementById('statPrayerCount').innerText = `${completedPrayers} / 5`;
+        }
+
+        function handleGlobalSearch(query) {
+            if (!query) return;
+            // Quick interactive filter simulation
+            console.log("Searching for:", query);
+        }
+    </script>
+</body>
+</html>
